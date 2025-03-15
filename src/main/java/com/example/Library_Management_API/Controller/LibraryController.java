@@ -19,10 +19,10 @@ public class LibraryController {
         this.libservice = libservice;
     }
 
-    @GetMapping("/items")
+  /*  @GetMapping("/items")
     public List<LibraryItem> getAllItems() {
         return libservice.getallItems();
-    }
+    }*/
 
 
     @PostMapping("/addbook")

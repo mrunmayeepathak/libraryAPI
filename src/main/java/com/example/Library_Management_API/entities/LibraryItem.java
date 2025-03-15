@@ -8,7 +8,6 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "itemType")
 @JsonSubTypes({
@@ -18,19 +17,27 @@ public abstract class LibraryItem {
 
  @Id
  @GeneratedValue(strategy = GenerationType.AUTO)
-  Long id;  // ✅ Ensure this is "id"
+  Long id;
 
-  String itemType; // ✅ Ensure it's "itemType" (camelCase)
 
-  int availableCopies; // ✅ Ensure it's "availableCopies" (camelCase)
- public LibraryItem(Long id, String itemType, int availableCopies) {
+ @Column(name = "itemType", nullable = false, updatable = false)
+ String itemType;
+
+
+ int availableCopies;
+
+ public LibraryItem() {
+  this.itemType = this.getClass().getSimpleName();
+ }
+
+ public LibraryItem(Long id,String itemType, int availableCopies) {
   this.id = id;
   this.itemType = itemType;
   this.availableCopies = availableCopies;
  }
 
- public String getItemType() { return itemType; }
- public void setItemType(String itemType) { this.itemType = itemType; }
+
+
 
  public int getAvailableCopies() { return availableCopies; }
  public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
