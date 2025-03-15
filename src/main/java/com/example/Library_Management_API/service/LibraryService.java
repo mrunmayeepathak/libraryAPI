@@ -1,6 +1,5 @@
 package com.example.Library_Management_API.service;
 
-import com.example.Library_Management_API.DTO.ItemDTO;
 import com.example.Library_Management_API.entities.LibraryItem;
 import com.example.Library_Management_API.repository.ItemRepository;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.example.Library_Management_API.Controller;
 
-import com.example.Library_Management_API.DTO.ItemDTO;
+
 import com.example.Library_Management_API.entities.LibraryItem;
 import com.example.Library_Management_API.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
