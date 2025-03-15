@@ -1,5 +1,7 @@
 package com.example.Library_Management_API.entities;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,8 +9,11 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "itemType")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Book.class, name = "Book"),
+})
 public abstract class LibraryItem {
 
  @Id
@@ -18,6 +23,11 @@ public abstract class LibraryItem {
   String itemType; // ✅ Ensure it's "itemType" (camelCase)
 
   int availableCopies; // ✅ Ensure it's "availableCopies" (camelCase)
+ public LibraryItem(Long id, String itemType, int availableCopies) {
+  this.id = id;
+  this.itemType = itemType;
+  this.availableCopies = availableCopies;
+ }
 
  public String getItemType() { return itemType; }
  public void setItemType(String itemType) { this.itemType = itemType; }

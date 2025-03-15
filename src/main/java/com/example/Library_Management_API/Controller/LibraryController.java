@@ -1,6 +1,6 @@
 package com.example.Library_Management_API.Controller;
 
-
+import com.example.Library_Management_API.entities.Book;
 import com.example.Library_Management_API.entities.LibraryItem;
 import com.example.Library_Management_API.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,13 @@ public class LibraryController {
     }
 
 
-    @PostMapping("/add") // Added path
-    public LibraryItem createNewItem(@RequestBody LibraryItem item) {
-        return libservice.createNewItem(item);
+    @PostMapping("/addbook")
+    public Book createNewBook(@RequestBody Book book) {
+        return libservice.createNewBook(book);
+    }
+
+    @GetMapping("/books")
+    public List<Book> getAllBooks() {
+        return libservice.getAllBooks();
     }
 }
