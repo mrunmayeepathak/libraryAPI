@@ -48,7 +48,7 @@ public BorrowedRecord()
         this.fine = fine;
 
     }
-    private int getBorrowDuration(User user, LibraryItem item) {
+    public int getBorrowDuration(User user, LibraryItem item) {
         switch (item.getItemType()) {
             case "Book":
                 return user instanceof Regular ? 14 :

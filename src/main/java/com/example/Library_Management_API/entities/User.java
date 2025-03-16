@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +48,15 @@ public abstract class User {
         return suspended;
     }
 
-    public void setLateReturns()
-    {
-        this.latereturnsinaMonth++;
+    public void setLateReturns() {
+        latereturnsinaMonth++;
+
+        if (latereturnsinaMonth > 2) {
+            suspended = true;
+            suspensionEndDate = LocalDateTime.now().plusDays(7);
+        }
     }
+
     public int getLateReturns()
     {
         return this.latereturnsinaMonth;
