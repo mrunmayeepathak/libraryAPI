@@ -1,9 +1,6 @@
 package com.example.Library_Management_API.Controller;
 
-import com.example.Library_Management_API.entities.Book;
-import com.example.Library_Management_API.entities.DVD;
-import com.example.Library_Management_API.entities.Journal;
-import com.example.Library_Management_API.entities.LibraryItem;
+import com.example.Library_Management_API.entities.*;
 import com.example.Library_Management_API.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -58,5 +55,17 @@ public class LibraryController {
     public Journal createNewJournal(Journal journal)
     {
         return libservice.createNewJournal(journal);
+    }
+
+    @GetMapping("/User")
+    public List<User> getAllUser()
+    {
+        return libservice.getAllUser();
+    }
+
+    @PostMapping("/addUser")
+    public User createNewUser(User user)
+    {
+        return libservice.createNewUser(user);
     }
 }
