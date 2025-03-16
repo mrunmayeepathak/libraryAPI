@@ -12,6 +12,8 @@ import lombok.*;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "itemType")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Book.class, name = "Book"),
+        @JsonSubTypes.Type(value = DVD.class, name = "DVD"),
+        @JsonSubTypes.Type(value = Journal.class, name = "Journal")
 })
 public abstract class LibraryItem {
 

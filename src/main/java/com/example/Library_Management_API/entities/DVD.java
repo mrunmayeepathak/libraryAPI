@@ -1,4 +1,46 @@
 package com.example.Library_Management_API.entities;
 
-public class DVD {
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+public class DVD extends LibraryItem {
+
+   String director;
+   Long asin;
+    public DVD()
+    {
+        super();
+    }
+    public DVD(Long id, int availableCopies, Long asin, String director) {
+        super(id, "DVD", availableCopies);
+        this.asin = asin;
+        this.director = director;
+    }
+
+
+    public Long  getasin()
+    {
+        return asin;
+    }
+    public void setasin(Long asin)
+    {
+        this.asin = asin;
+    }
+
+    public String getDirector()
+    {
+        return director ;
+    }
+    public void setDirector(String director)
+    {
+        this.director = director;
+    }
+
+
 }

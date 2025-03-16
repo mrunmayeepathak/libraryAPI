@@ -1,5 +1,6 @@
 package com.example.Library_Management_API.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,42 +10,45 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-
-
 public class Book extends LibraryItem {
 
 
- Long ISBN;
+
+
+ Long isbn;
  String author;
  public Book()
  {
   super();
  }
- public Book(Long id, int availableCopies, Long ISBN, String author) {
+ public Book(Long id, int availableCopies, Long isbn, String author) {
   super(id, "Book", availableCopies);
-  this.ISBN = ISBN;
+  this.isbn = isbn;
   this.author = author;
  }
 
 
- public Long  getISBN()
- {
-   return ISBN;
- }
- public void setISBN(Long ISBN)
- {
-  this.ISBN = ISBN;
- }
 
+
+
+ public void setAuthor(String author)
+ {
+   this.author = author;
+ }
  public String getAuthor()
  {
   return author;
  }
- public void setAuthor(String author)
+
+
+ public void setisbn(Long isbn)
  {
-   this.author = author;
+  this.isbn = isbn;
+ }
+ public Long  getisbn()
+ {
+  return isbn;
  }
 
 }

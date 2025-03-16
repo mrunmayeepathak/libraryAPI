@@ -1,6 +1,8 @@
 package com.example.Library_Management_API.Controller;
 
 import com.example.Library_Management_API.entities.Book;
+import com.example.Library_Management_API.entities.DVD;
+import com.example.Library_Management_API.entities.Journal;
 import com.example.Library_Management_API.entities.LibraryItem;
 import com.example.Library_Management_API.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,10 @@ public class LibraryController {
         this.libservice = libservice;
     }
 
-  /*  @GetMapping("/items")
+    @GetMapping("/items")
     public List<LibraryItem> getAllItems() {
         return libservice.getallItems();
-    }*/
+    }
 
 
     @PostMapping("/addbook")
@@ -33,5 +35,28 @@ public class LibraryController {
     @GetMapping("/books")
     public List<Book> getAllBooks() {
         return libservice.getAllBooks();
+    }
+
+    @PostMapping("/addDVD")
+    public DVD createNewDVD(@RequestBody DVD dvd)
+    {
+        return libservice.createNewDVD(dvd);
+    }
+
+    @GetMapping("/DVDs")
+    public List<DVD> getAllDVDs()
+    {
+        return libservice.getAllDVDs();
+    }
+
+    @GetMapping("/Journal")
+    public List<Journal> getAllJournals()
+    {
+        return libservice.getAllJournals();
+    }
+    @PostMapping("/addJournal")
+    public Journal createNewJournal(Journal journal)
+    {
+        return libservice.createNewJournal(journal);
     }
 }
