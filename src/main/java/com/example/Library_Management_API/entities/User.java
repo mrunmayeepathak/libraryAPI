@@ -1,10 +1,14 @@
 package com.example.Library_Management_API.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +29,11 @@ public abstract class User {
     String email;
     String userType;
     int maxBorrow=0;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<BorrowedRecord> borrowHistory =  new ArrayList<>();;
+
     public User() {
         this.userType = this.getClass().getSimpleName();
     }
@@ -36,6 +45,8 @@ public abstract class User {
         this.userType = userType;
         this.maxBorrow = maxBorrow;
     }
+
+
     public Long getUserID()
     {
         return userId;
@@ -69,5 +80,17 @@ public abstract class User {
     public void setUserType(String userType)
     {
         this.userType = userType;
+    }
+    public List<BorrowedRecord> getBorrowHistory() {
+        return borrowHistory;
+    }
+
+    public void setBorrowHistory(List<BorrowedRecord> borrowHistory)
+    {
+        this.borrowHistory = borrowHistory;
+    }
+
+    public int getMaxBorrow() {
+        return maxBorrow;
     }
 }

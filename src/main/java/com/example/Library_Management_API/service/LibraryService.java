@@ -2,6 +2,7 @@ package com.example.Library_Management_API.service;
 
 import com.example.Library_Management_API.entities.*;
 import com.example.Library_Management_API.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -106,6 +107,7 @@ public class LibraryService {
 
     }
 
+    @Transactional
     public BorrowedRecord borrowItem(Long userId, Long itemId) {
        // System.out.println("Checking userId: " + userId);
         //System.out.println("Checking itemId: " + itemId);
@@ -115,10 +117,30 @@ public class LibraryService {
         LibraryItem item = itemrepo.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item with ID " + itemId + " not found"));
 
+        if(user.getBorrowHistory().size()>=user.getMaxBorrow())
+        {
+            throw new RuntimeException("Borrow limit exceeded for user: " + user.getName());
+
+        }
+
+        if (item.getAvailableCopies() == 0) {
+            throw new RuntimeException("No available copies of item: " + item.getItemType());
+        }
+
         //System.out.println("Borrowing Item: " + item.getItemType() + " for User: " + user.getName());
 
         BorrowedRecord borrow = new BorrowedRecord(user, item);
-        return borrowedrepo.save(borrow);
+        borrowedrepo.save(borrow);
+
+        // ✅ Add to user's borrow history and update user
+        user.getBorrowHistory().add(borrow);
+        userrepo.save(user);
+
+        // ✅ Reduce item availability and update item
+        item.setAvailableCopies(item.getAvailableCopies() - 1);
+        itemrepo.save(item);
+
+        return borrow;
 
 
     }

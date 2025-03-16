@@ -1,5 +1,6 @@
 package com.example.Library_Management_API.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,20 +14,27 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class BorrowedRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonBackReference
     User user;
+
     @ManyToOne
     @JoinColumn(name = "itemId")
     LibraryItem item;
 
     LocalDateTime borrowedDate;
     LocalDateTime returnDate;
+public BorrowedRecord()
+{
 
+}
     boolean returned;
     public BorrowedRecord(User user, LibraryItem item)
     {
