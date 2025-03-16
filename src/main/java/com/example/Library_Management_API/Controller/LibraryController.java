@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/library")
@@ -17,6 +18,25 @@ public class LibraryController {
     public LibraryController(LibraryService libservice) {
         this.libservice = libservice;
     }
+    @PostMapping("/addItem")
+    public LibraryItem createNewItem(@RequestBody Map<String, Object> requestBody)
+    {
+       /* System.out.println("Received User Data: Name = " + user.getName() +
+                ", Email = " + user.getEmail() +
+                ", userType = " + user.getUserType());*/
+        String itemType = (String) requestBody.get("itemType");
+        int availableCopies = (int) requestBody.get("availableCopies");
+
+        Long isbn = requestBody.containsKey("isbn") ? ((Number) requestBody.get("isbn")).longValue() : null;
+        Long issn = requestBody.containsKey("issn") ? ((Number) requestBody.get("issn")).longValue() : null;
+        Long asin = requestBody.containsKey("asin") ? ((Number) requestBody.get("asin")).longValue() : null;
+        String author = (String) requestBody.get("author");
+        String director = (String) requestBody.get("director");
+        String writer = (String) requestBody.get("writer");
+
+
+        return libservice.createNewItem(itemType, availableCopies, isbn, issn, asin, author, director,writer);
+    }
 
     @GetMapping("/items")
     public List<LibraryItem> getAllItems() {
@@ -24,7 +44,7 @@ public class LibraryController {
     }
 
 
-    @PostMapping("/addbook")
+    /*@PostMapping("/addbook")
     public Book createNewBook(@RequestBody Book book) {
         return libservice.createNewBook(book);
     }
@@ -55,7 +75,7 @@ public class LibraryController {
     public Journal createNewJournal(Journal journal)
     {
         return libservice.createNewJournal(journal);
-    }
+    }*/
 
     @GetMapping("/User")
     public List<User> getAllUser()
@@ -71,4 +91,16 @@ public class LibraryController {
                 ", userType = " + user.getUserType());
         return libservice.createNewUser(user.getName(), user.getEmail(), user.getUserType());
     }
+
+    @PostMapping("/borrow")
+    public BorrowedRecord borrowItem(@RequestBody Map<String, Object>requestBody)
+    {
+        Long userId  = requestBody.containsKey("userId") ? ((Number) requestBody.get("userId")).longValue() : null;
+        Long itemId = requestBody.containsKey("itemId") ? ((Number) requestBody.get("itemId")).longValue() : null;
+
+        return libservice.borrowItem(userId, itemId );
+    }
+
+
+
 }

@@ -36,6 +36,14 @@ public abstract class User {
         this.userType = userType;
         this.maxBorrow = maxBorrow;
     }
+    public Long getUserID()
+    {
+        return userId;
+    }
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
+    }
     public String getName()
     {
         return name;

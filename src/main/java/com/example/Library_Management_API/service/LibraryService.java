@@ -13,19 +13,21 @@ public class LibraryService {
     private final DVDrepository DVDrepo;
     private final JournalRepository journalrepo;
     private final UserRepository userrepo;
+    private final BorrowedRepository borrowedrepo;
 
 
-    public LibraryService(ItemRepository itemrepo, BookRepository bookrepo, DVDrepository DVDrepo, JournalRepository journalRepo, UserRepository userrepo) {
+    public LibraryService(ItemRepository itemrepo, BookRepository bookrepo, DVDrepository DVDrepo, JournalRepository journalRepo, UserRepository userrepo, BorrowedRepository borrowedrepo) {
         this.itemrepo = itemrepo;
         this.bookrepo = bookrepo;
         this.DVDrepo = DVDrepo;
         this.journalrepo = journalRepo;
         this.userrepo = userrepo;
+        this.borrowedrepo = borrowedrepo;
     }
 
 
 
-    public Book createNewBook(Book book) {
+    /*public Book createNewBook(Book book) {
         return bookrepo.save(book);
     }
 
@@ -33,9 +35,7 @@ public class LibraryService {
         return bookrepo.findAll();
     }
 
-    public List<LibraryItem> getallItems() {
-        return itemrepo.findAll();
-    }
+
 
     public DVD createNewDVD(DVD dvd)
     {
@@ -53,6 +53,30 @@ public class LibraryService {
     public Journal createNewJournal(Journal journal)
     {
         return journalrepo.save(journal);
+    }*/
+
+    public LibraryItem createNewItem(String itemType, int availableCopies, Long isbn, Long issn, Long asin, String author, String director, String writer )
+    {
+        LibraryItem item;
+
+        switch(itemType.toLowerCase())
+        {
+            case "book" :
+                item = new Book(availableCopies, isbn, author);
+                break;
+            case "dvd":
+                item = new DVD(availableCopies,asin, director);
+                break;
+            case "journal":
+                item = new Journal(availableCopies,issn,writer);
+                break;
+            default :
+                throw new IllegalArgumentException("Invalid userType: " + itemType);
+        }
+        return itemrepo.save(item);
+    }
+    public List<LibraryItem> getallItems() {
+        return itemrepo.findAll();
     }
 
     public List<User> getAllUser() {
@@ -78,6 +102,23 @@ public class LibraryService {
                 throw new IllegalArgumentException("Invalid userType: " + userType);
         }
         return userrepo.save(user);
+
+
+    }
+
+    public BorrowedRecord borrowItem(Long userId, Long itemId) {
+       // System.out.println("Checking userId: " + userId);
+        //System.out.println("Checking itemId: " + itemId);
+
+        User user = userrepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User with ID " + userId + " not found"));
+        LibraryItem item = itemrepo.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item with ID " + itemId + " not found"));
+
+        //System.out.println("Borrowing Item: " + item.getItemType() + " for User: " + user.getName());
+
+        BorrowedRecord borrow = new BorrowedRecord(user, item);
+        return borrowedrepo.save(borrow);
 
 
     }

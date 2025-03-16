@@ -21,8 +21,8 @@ public class Journal extends LibraryItem {
         super();
 
     }
-    public Journal(Long id, int availableCopies, Long issn, String writer) {
-        super(id, "Journal", availableCopies);
+    public Journal(int availableCopies, Long issn, String writer) {
+        super("Journal", availableCopies);
         this.issn = issn;
         this.writer = writer;
     }

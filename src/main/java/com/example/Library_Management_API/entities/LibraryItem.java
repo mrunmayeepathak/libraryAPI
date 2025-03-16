@@ -19,10 +19,9 @@ public abstract class LibraryItem {
 
  @Id
  @GeneratedValue(strategy = GenerationType.AUTO)
-  Long id;
+  Long itemId;
 
 
- @Column(name = "itemType", nullable = false, updatable = false)
  String itemType;
 
 
@@ -32,15 +31,29 @@ public abstract class LibraryItem {
   this.itemType = this.getClass().getSimpleName();
  }
 
- public LibraryItem(Long id,String itemType, int availableCopies) {
-  this.id = id;
+ public LibraryItem(String itemType, int availableCopies) {
   this.itemType = itemType;
   this.availableCopies = availableCopies;
  }
 
 
 
-
+public Long getItemId ()
+{
+ return itemId;
+}
+public void setItemId(Long itemId)
+{
+  this.itemId = itemId;
+}
+public String getItemType()
+{
+ return itemType;
+}
+public void setItemType(String itemType)
+{
+ this.itemType = itemType;
+}
  public int getAvailableCopies() { return availableCopies; }
  public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
 }

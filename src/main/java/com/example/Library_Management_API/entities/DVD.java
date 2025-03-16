@@ -17,8 +17,8 @@ public class DVD extends LibraryItem {
     {
         super();
     }
-    public DVD(Long id, int availableCopies, Long asin, String director) {
-        super(id, "DVD", availableCopies);
+    public DVD( int availableCopies, Long asin, String director) {
+        super("DVD", availableCopies);
         this.asin = asin;
         this.director = director;
     }

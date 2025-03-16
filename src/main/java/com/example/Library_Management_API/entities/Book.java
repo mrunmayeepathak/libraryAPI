@@ -14,16 +14,14 @@ import lombok.Setter;
 public class Book extends LibraryItem {
 
 
-
-
  Long isbn;
  String author;
  public Book()
  {
   super();
  }
- public Book(Long id, int availableCopies, Long isbn, String author) {
-  super(id, "Book", availableCopies);
+ public Book( int availableCopies, Long isbn, String author) {
+  super( "Book",availableCopies);
   this.isbn = isbn;
   this.author = author;
  }
