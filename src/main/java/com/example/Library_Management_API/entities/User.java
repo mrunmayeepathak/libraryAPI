@@ -126,6 +126,23 @@ public abstract class User {
     }
 
     public int getMaxBorrow() {
-        return maxBorrow;
+        return this instanceof Regular ? 4 :
+                this instanceof Premium ? 10 :
+                        this instanceof Student ? 6 : 0;
+    }
+    public int getDefaultMaxBorrow() {
+        return this instanceof Regular ? 4 :
+                this instanceof Premium ? 10 :
+                        this instanceof Student ? 6 : 0;
+    }
+
+    public void setMaxBorrow(int maxBorrow)
+    {
+        this.maxBorrow = maxBorrow;
+    }
+
+    public void updateMaxBorrow(int activeBorrows) {
+        this.maxBorrow = getDefaultMaxBorrow() - activeBorrows;
+
     }
 }

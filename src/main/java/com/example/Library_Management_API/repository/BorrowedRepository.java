@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface BorrowedRepository extends JpaRepository<BorrowedRecord, Long > {
     List<BorrowedRecord> findByUserAndItemAndReturnedFalse(User user, LibraryItem item);
+
+    int countByUserAndReturnedFalse(User user);
 }

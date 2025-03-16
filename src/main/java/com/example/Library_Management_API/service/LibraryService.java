@@ -121,11 +121,22 @@ public class LibraryService {
         LibraryItem item = itemrepo.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Item with ID " + itemId + " not found"));
 
-        if(user.getBorrowHistory().size()>=user.getMaxBorrow())
+        int activeBorrows = borrowedrepo.countByUserAndReturnedFalse(user);
+        System.out.println("Active Borrows before borrowing: " + activeBorrows);
+
+        if (user.isSuspended()) {
+            throw new RuntimeException("User " + user.getName() + " is suspended and cannot borrow items.");
+        }
+
+        if (activeBorrows >= user.getMaxBorrow()) {
+            throw new RuntimeException("Borrow limit exceeded for user: " + user.getName());
+        }
+
+        /*if(user.getBorrowHistory().size()>=user.getMaxBorrow())
         {
             throw new RuntimeException("Borrow limit exceeded for user: " + user.getName());
 
-        }
+        }*/
 
         if (item.getAvailableCopies() == 0) {
             throw new RuntimeException("No available copies of item: " + item.getItemType());
@@ -136,6 +147,8 @@ public class LibraryService {
         BorrowedRecord borrow = new BorrowedRecord(user, item);
         borrowedrepo.save(borrow);
 
+        user.updateMaxBorrow(activeBorrows + 1);
+        userrepo.save(user);
 
         user.getBorrowHistory().add(borrow);
         userrepo.save(user);
@@ -143,6 +156,8 @@ public class LibraryService {
 
         item.setAvailableCopies(item.getAvailableCopies() - 1);
         itemrepo.save(item);
+
+        System.out.println("New Borrow Limit: " + user.getMaxBorrow());
 
         return borrow;
 
@@ -191,6 +206,10 @@ public class LibraryService {
         item.setAvailableCopies(item.getAvailableCopies() + 1);
         itemrepo.save(item);
 
+        int activeBorrows = borrowedrepo.countByUserAndReturnedFalse(user);
+        user.updateMaxBorrow(activeBorrows);
+        userrepo.save(user);
+
         if (actualreturnDate.isAfter(dueDate)) {
             user.setLateReturns();
             userrepo.save(user);
@@ -206,7 +225,7 @@ public class LibraryService {
         response.put("itemId", itemId);
         response.put("returnDate", actualreturnDate);
         response.put("fineAmount", fine);
-        response.put("lateReturs", user.getLateReturns());
+        response.put("lateReturns", user.getLateReturns());
 
         return response;
 
