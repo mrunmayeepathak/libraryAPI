@@ -5,6 +5,7 @@ import com.example.Library_Management_API.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +100,16 @@ public class LibraryController {
         Long itemId = requestBody.containsKey("itemId") ? ((Number) requestBody.get("itemId")).longValue() : null;
 
         return libservice.borrowItem(userId, itemId );
+    }
+
+    @PostMapping("/return")
+    public Map<String , Object>  returnItem(@RequestBody Map<String, Object> requestBody)
+    {
+        Long userId  = requestBody.containsKey("userId") ? ((Number) requestBody.get("userId")).longValue() : null;
+        Long itemId = requestBody.containsKey("itemId") ? ((Number) requestBody.get("itemId")).longValue() : null;
+        LocalDateTime returnDate = LocalDateTime.parse((String) requestBody.get("returnDate"));
+        Map<String, Object> response = libservice.returnItem(userId, itemId, returnDate);
+        return response;
     }
 
 

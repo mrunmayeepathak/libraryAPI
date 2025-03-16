@@ -4,7 +4,11 @@ import com.example.Library_Management_API.entities.*;
 import com.example.Library_Management_API.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LibraryService {
@@ -132,15 +136,79 @@ public class LibraryService {
         BorrowedRecord borrow = new BorrowedRecord(user, item);
         borrowedrepo.save(borrow);
 
-        // ✅ Add to user's borrow history and update user
+
         user.getBorrowHistory().add(borrow);
         userrepo.save(user);
 
-        // ✅ Reduce item availability and update item
+
         item.setAvailableCopies(item.getAvailableCopies() - 1);
         itemrepo.save(item);
 
         return borrow;
+
+
+    }
+
+    public Map<String, Object> returnItem(Long userId, Long itemId, LocalDateTime actualreturnDate ) {
+
+        User user = userrepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User with ID " + userId + " not found"));
+        LibraryItem item = itemrepo.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item with ID " + itemId + " not found"));
+
+
+        List<BorrowedRecord> borrowRecords = borrowedrepo.findByUserAndItemAndReturnedFalse(user, item);
+
+        if (borrowRecords.isEmpty()) {
+            throw new RuntimeException("No active borrow record found for userId: " + userId + " and itemId: " + itemId);
+        }
+
+
+
+        BorrowedRecord record = borrowRecords.get(0);
+
+        LocalDateTime dueDate = record.getReturnDate();
+        record.setReturned(true);
+        record.setReturnDate(actualreturnDate);
+       // borrowedrepo.save(record);
+
+        double fine = 0.0;
+        if (actualreturnDate.isAfter(dueDate)) {
+            long overdueDays = java.time.Duration.between(dueDate.withHour(0).withMinute(0).withSecond(0).withNano(0),
+                            actualreturnDate.withHour(0).withMinute(0).withSecond(0).withNano(0))
+                    .toDays();
+            switch (item.getItemType()) {
+                case "Book": fine = overdueDays * 0.5; break;
+                case "Magazine":
+                case "Journal": fine = overdueDays * 1.0; break;
+                case "DVD": fine =  overdueDays * 2.0; break;
+                default: fine = 0.0;
+            }
+        }
+        record.setFine(fine);
+        borrowedrepo.save(record);
+
+        item.setAvailableCopies(item.getAvailableCopies() + 1);
+        itemrepo.save(item);
+
+        if (actualreturnDate.isAfter(dueDate)) {
+            user.setLateReturns();
+            userrepo.save(user);
+        }
+
+        if (user.getLateReturns() > 2) {
+            user.suspendforaweek();
+            userrepo.save(user);
+        }
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("userId", userId);
+        response.put("itemId", itemId);
+        response.put("returnDate", actualreturnDate);
+        response.put("fineAmount", fine);
+        response.put("lateReturs", user.getLateReturns());
+
+        return response;
 
 
     }

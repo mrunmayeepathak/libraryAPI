@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,35 @@ public abstract class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<BorrowedRecord> borrowHistory =  new ArrayList<>();;
+    private List<BorrowedRecord> borrowHistory =  new ArrayList<>();
+
+    boolean suspended = false;
+    LocalDateTime suspensionEndDate = LocalDateTime.now();
+    int latereturnsinaMonth =0;
+    public boolean isSuspended()
+    {
+        if(suspended && suspensionEndDate.isBefore(LocalDateTime.now()))
+        {
+            suspended = false;
+        }
+        return suspended;
+    }
+
+    public void setLateReturns()
+    {
+        this.latereturnsinaMonth++;
+    }
+    public int getLateReturns()
+    {
+        return this.latereturnsinaMonth;
+    }
+
+    public void suspendforaweek()
+    {
+        this.suspended = true;
+        this.suspensionEndDate = LocalDateTime.now().plusDays(7);
+    }
+
 
     public User() {
         this.userType = this.getClass().getSimpleName();
