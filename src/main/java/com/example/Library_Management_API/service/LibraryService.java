@@ -1,16 +1,9 @@
 package com.example.Library_Management_API.service;
 
-import com.example.Library_Management_API.entities.Book;
-import com.example.Library_Management_API.entities.DVD;
-import com.example.Library_Management_API.entities.Journal;
-import com.example.Library_Management_API.entities.LibraryItem;
-import com.example.Library_Management_API.repository.BookRepository;
-import com.example.Library_Management_API.repository.DVDrepository;
-import com.example.Library_Management_API.repository.ItemRepository;
-import com.example.Library_Management_API.repository.JournalRepository;
+import com.example.Library_Management_API.entities.*;
+import com.example.Library_Management_API.repository.*;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class LibraryService {
@@ -19,13 +12,15 @@ public class LibraryService {
     private final BookRepository bookrepo;
     private final DVDrepository DVDrepo;
     private final JournalRepository journalrepo;
+    private final UserRepository userrepo;
 
 
-    public LibraryService(ItemRepository itemrepo, BookRepository bookrepo, DVDrepository DVDrepo, JournalRepository journalRepo) {
+    public LibraryService(ItemRepository itemrepo, BookRepository bookrepo, DVDrepository DVDrepo, JournalRepository journalRepo, UserRepository userrepo) {
         this.itemrepo = itemrepo;
         this.bookrepo = bookrepo;
         this.DVDrepo = DVDrepo;
         this.journalrepo = journalRepo;
+        this.userrepo = userrepo;
     }
 
 
@@ -58,5 +53,32 @@ public class LibraryService {
     public Journal createNewJournal(Journal journal)
     {
         return journalrepo.save(journal);
+    }
+
+    public List<User> getAllUser() {
+        return userrepo.findAll();
+    }
+
+    public User createNewUser(String name , String email, String userType ) {
+        User user;
+
+        switch(userType.toLowerCase())
+        {
+            case "regular" :
+                user = new Regular(name, email);
+                break;
+
+            case "premium":
+                user = new Premium(name,email);
+                break;
+            case "student":
+                user = new Student(name, email);
+                break;
+            default :
+                throw new IllegalArgumentException("Invalid userType: " + userType);
+        }
+        return userrepo.save(user);
+
+
     }
 }

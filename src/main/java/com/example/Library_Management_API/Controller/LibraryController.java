@@ -64,8 +64,11 @@ public class LibraryController {
     }
 
     @PostMapping("/addUser")
-    public User createNewUser(User user)
+    public User createNewUser(@RequestBody  User user)
     {
-        return libservice.createNewUser(user);
+        System.out.println("Received User Data: Name = " + user.getName() +
+                ", Email = " + user.getEmail() +
+                ", userType = " + user.getUserType());
+        return libservice.createNewUser(user.getName(), user.getEmail(), user.getUserType());
     }
 }

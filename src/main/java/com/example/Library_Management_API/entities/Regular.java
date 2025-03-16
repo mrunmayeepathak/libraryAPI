@@ -1,7 +1,6 @@
 package com.example.Library_Management_API.entities;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,12 +8,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-public class RegularUser extends User{
-
-    public RegularUser(String name , String email)
+public class Regular extends User{
+    public Regular()
     {
-        super(name, email,4);
+        super();
+    }
+
+    public Regular(String name , String email )
+    {
+        super(name, email,"Regular",4);
 
     }
 
